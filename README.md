@@ -21,7 +21,7 @@ Finally the driver fixes up the SMU state so that only the guard word differs fr
 
 At dispatch time the driver:
 
-1. Reads the shared `MeiMeiDXEv3SmuVar` configuration variable owned by the BC250-DXEv3-Menu-Driver.
+1. Reads the shared `MeiMeiDXEv3SmuUnlockVar` configuration variable owned by the BC250-DXEv3-Menu-Driver.
 2. If the `SmuUnlock` field (byte offset 0) is zero, or the variable is absent/malformed, the driver logs and exits without touching the SMU (fail-closed).
 3. Otherwise it performs the unlock:
    1. Verifies the SMU is alive (Q3 test message).
@@ -37,15 +37,15 @@ The driver is fail-closed and fire-and-forget: any failure is logged and the nor
 
 ## Configuration
 
-The driver consumes the `MeiMeiDXEv3SmuVar` variable defined by the BC250-DXEv3-Menu-Driver:
+The driver consumes the `MeiMeiDXEv3SmuUnlockVar` variable defined by the BC250-DXEv3-Menu-Driver:
 
 | Item | Value |
 | --- | --- |
-| Variable name | `MeiMeiDXEv3SmuVar` |
+| Variable name | `MeiMeiDXEv3SmuUnlockVar` |
 | Vendor GUID | `49CC168D-E8B0-4613-A807-16969986726F` |
 | Attributes | `BOOTSERVICE_ACCESS` \| `RUNTIME_ACCESS` \| `NON_VOLATILE` |
 
-The unlock is gated by the `SmuUnlock` byte at offset 0 of the 2-byte `SMU_CONFIG` structure. If the variable does not exist (the menu driver's "all zeros" default), the unlock is not performed. The shared definitions live in `BC250DXEv3SMUUnlockPkg/Include/MeiMeiDXEv3MenuConfig.h`.
+The unlock is gated by the `SmuUnlock` byte at offset 0 of the 1-byte `SMU_UNLOCK_CONFIG` structure. If the variable does not exist (the menu driver's "all zeros" default), the unlock is not performed. The shared definitions live in `BC250DXEv3SMUUnlockPkg/Include/MeiMeiDXEv3MenuConfig.h`.
 
 ## Build
 

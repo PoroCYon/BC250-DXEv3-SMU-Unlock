@@ -1132,14 +1132,14 @@ DoSmuUnlock (
 
 /**
   Determine whether the SMU unlock option is enabled in the shared
-  MeiMeiDXEv3SmuVar variable.
+  MeiMeiDXEv3SmuUnlockVar variable.
 
   The variable is managed by the BC250-DXEv3-Menu-Driver.  When the variable
   is absent the menu driver's defaults (all zeros) apply, so this driver
   treats a missing variable as disabled and fails closed.
 
-  @retval TRUE   The SmuUnlock field of the SMU configuration variable is
-                 non-zero.
+  @retval TRUE   The SmuUnlock field of the SMU unlock configuration variable
+                 is non-zero.
   @retval FALSE  The variable is absent, malformed, or the field is zero.
 **/
 STATIC
@@ -1148,16 +1148,16 @@ ReadSmuUnlockEnabled (
   VOID
   )
 {
-  EFI_STATUS  Status;
-  UINTN       DataSize;
-  SMU_CONFIG  Config;
-  EFI_GUID    ConfigGuid = MEIMEIDXEV3_CONFIG_VAR_GUID;
+  EFI_STATUS          Status;
+  UINTN               DataSize;
+  SMU_UNLOCK_CONFIG   Config;
+  EFI_GUID            ConfigGuid = MEIMEIDXEV3_CONFIG_VAR_GUID;
 
   DataSize = sizeof (Config);
   ZeroMem (&Config, sizeof (Config));
 
   Status = gRT->GetVariable (
-                  MEIMEIDXEV3_SMU_VAR_NAME,
+                  MEIMEIDXEV3_SMU_UNLOCK_VAR_NAME,
                   &ConfigGuid,
                   NULL,
                   &DataSize,
@@ -1166,19 +1166,19 @@ ReadSmuUnlockEnabled (
 
   if (Status == EFI_NOT_FOUND) {
     DEBUG ((DEBUG_INFO, "BC250DXEv3SMUUnlockDxe: %s not found, SMU unlock disabled\n",
-            MEIMEIDXEV3_SMU_VAR_NAME));
+            MEIMEIDXEV3_SMU_UNLOCK_VAR_NAME));
     return FALSE;
   }
 
   if (Status == EFI_BUFFER_TOO_SMALL) {
-    DEBUG ((DEBUG_WARN, "BC250DXEv3SMUUnlockDxe: %s smaller than SMU_CONFIG, SMU unlock disabled\n",
-            MEIMEIDXEV3_SMU_VAR_NAME));
+    DEBUG ((DEBUG_WARN, "BC250DXEv3SMUUnlockDxe: %s smaller than SMU_UNLOCK_CONFIG, SMU unlock disabled\n",
+            MEIMEIDXEV3_SMU_UNLOCK_VAR_NAME));
     return FALSE;
   }
 
   if (EFI_ERROR (Status)) {
     DEBUG ((DEBUG_WARN, "BC250DXEv3SMUUnlockDxe: failed to read %s: %r\n",
-            MEIMEIDXEV3_SMU_VAR_NAME, Status));
+            MEIMEIDXEV3_SMU_UNLOCK_VAR_NAME, Status));
     return FALSE;
   }
 
@@ -1190,7 +1190,7 @@ ReadSmuUnlockEnabled (
   DXE driver entry point.
 
   Executes the SMU unlock sequence once at dispatch time, but only when the
-  SmuUnlock option is enabled in the shared MeiMeiDXEv3SmuVar variable.
+  SmuUnlock option is enabled in the shared MeiMeiDXEv3SmuUnlockVar variable.
   The driver is fire-and-forget: failures are logged and the boot path always
   continues.
 
@@ -1213,9 +1213,9 @@ BC250DXEv3SMUUnlockEntryPoint (
   DEBUG ((DEBUG_INFO, "BC250DXEv3SMUUnlockDxe: entry\n"));
 
   //
-  // The unlock is gated by the shared MeiMeiDXEv3SmuVar variable managed by
-  // the BC250-DXEv3-Menu-Driver.  When the SmuUnlock option is disabled or the
-  // variable is absent, skip all SMU activity.
+  // The unlock is gated by the shared MeiMeiDXEv3SmuUnlockVar variable managed
+  // by the BC250-DXEv3-Menu-Driver.  When the SmuUnlock option is disabled or
+  // the variable is absent, skip all SMU activity.
   //
   if (!ReadSmuUnlockEnabled ()) {
     DEBUG ((DEBUG_INFO, "BC250DXEv3SMUUnlockDxe: SMU unlock not enabled, skipping\n"));
