@@ -31,6 +31,7 @@
 #include <Library/UefiRuntimeServicesTableLib.h>
 
 #include <MeiMeiDXEv3MenuConfig.h>
+#include <MeiMeiDXEv3SmuUnlockProtocol.h>
 
 //
 // Host bridge PCI configuration-space offsets that expose the SMN indirect
@@ -144,6 +145,12 @@ STATIC CONST SMU_FIXUP_ENTRY  mFixupTable[] = {
 // sits at 2.
 //
 STATIC UINTN  mSubq4CurIdx = 0;
+
+//
+// Marker protocol instance installed once the unlock driver has run.
+//
+STATIC MEIMEIDXEV3_SMU_UNLOCK_PROTOCOL  mSmuUnlockProtocol;
+STATIC EFI_HANDLE                       mSmuUnlockProtocolHandle = NULL;
 
 /**
   Read a 32-bit value from an SMN register through the host bridge PCI config
@@ -1211,6 +1218,29 @@ BC250DXEv3SMUUnlockEntryPoint (
   UINT8                 *PageVa;
 
   DEBUG ((DEBUG_INFO, "BC250DXEv3SMUUnlockDxe: entry\n"));
+
+  //
+  // Publish the "SMU unlock ran" marker protocol before any early return.
+  // Consumers (SMU patch, core unlock) list this GUID in their [Depex] so the
+  // DXE dispatcher will not load them before this driver has executed on this
+  // boot.  The marker is an ordering signal only; consumers still probe the
+  // gated Q3 interface at runtime to decide whether it is actually usable.
+  //
+  if (mSmuUnlockProtocolHandle == NULL) {
+    mSmuUnlockProtocol.Revision = 1U;
+    Status = gBS->InstallProtocolInterface (
+                    &mSmuUnlockProtocolHandle,
+                    &gMeiMeiDXEv3SmuUnlockProtocolGuid,
+                    EFI_NATIVE_INTERFACE,
+                    &mSmuUnlockProtocol
+                    );
+    if (EFI_ERROR (Status)) {
+      // Non-fatal: ordering is best-effort; the unlock path still proceeds.
+      DEBUG ((DEBUG_ERROR,
+              "BC250DXEv3SMUUnlockDxe: failed to install SMU-unlock protocol: %r\n",
+              Status));
+    }
+  }
 
   //
   // The unlock is gated by the shared MeiMeiDXEv3SmuUnlockVar variable managed

@@ -36,6 +36,7 @@
 [Protocols]
   gEfiLoadedImageProtocolGuid
   gEfiVariableArchProtocolGuid
+  gMeiMeiDXEv3SmuUnlockProtocolGuid
 
 [Depex]
   gEfiVariableArchProtocolGuid
