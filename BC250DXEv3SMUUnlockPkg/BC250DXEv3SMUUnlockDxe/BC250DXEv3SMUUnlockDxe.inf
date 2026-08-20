@@ -1,0 +1,41 @@
+## @file
+#  BC250DXEv3SMUUnlockDxe.inf
+#
+#  DXE driver INF for the BC-250 SMU secure-access unlock.
+#
+#  Copyright (C) 2026 RescueMei
+#  SPDX-License-Identifier: MIT
+##
+
+[Defines]
+  INF_VERSION                    = 0x0001001A
+  BASE_NAME                      = MeiMeiDXEv3SMUUnlock
+  FILE_GUID                      = A3F8B2D5-7C4E-4F0A-B1D2-9E6F3C8A5B71
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 0.1
+  ENTRY_POINT                    = BC250DXEv3SMUUnlockEntryPoint
+
+[Sources]
+  BC250DXEv3SMUUnlockDxe.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  BC250DXEv3SMUUnlockPkg/BC250DXEv3SMUUnlockPkg.dec
+
+[LibraryClasses]
+  BaseLib
+  BaseMemoryLib
+  DebugLib
+  MemoryAllocationLib
+  PciSegmentLib
+  UefiBootServicesTableLib
+  UefiDriverEntryPoint
+  UefiLib
+  UefiRuntimeServicesTableLib
+
+[Protocols]
+  gEfiLoadedImageProtocolGuid
+  gEfiVariableArchProtocolGuid
+
+[Depex]
+  gEfiVariableArchProtocolGuid

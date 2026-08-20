@@ -1,0 +1,18 @@
+## @file
+#  BC250DXEv3SMUUnlockPkg
+#
+#  DXE driver package that carries out rw-r-r-0644's BC-250 SMU secure-access
+#  unlock (https://github.com/rw-r-r-0644/bc250-smu-unlock).
+#
+#  Copyright (C) 2026 RescueMei
+#  SPDX-License-Identifier: MIT
+##
+
+[Defines]
+  DEC_SPECIFICATION              = 0x0001001A
+  PACKAGE_NAME                   = BC250DXEv3SMUUnlock
+  PACKAGE_GUID                   = D20E4D7C-2F6A-4BBA-9C14-5E3FA8B1C6D3
+  PACKAGE_VERSION                = 0.1
+
+[Includes]
+  Include
