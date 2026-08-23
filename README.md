@@ -72,8 +72,8 @@ NO_CONTAINER=1 EDK2_DIR=/path/to/edk2 ./build_ffs.sh
 
 Artifacts are written to:
 
-- `Build/Output/MeiMeiDXEv3SMUUnlock.efi`
-- `Build/Output/MeiMeiDXEv3SMUUnlock.ffs`
+- `Build/Output/MeiMeiDXEv3_SMU_Unlock.efi`
+- `Build/Output/MeiMeiDXEv3_SMU_Unlock.ffs`
 
 The `.ffs` can be inserted into an AMI DXE firmware volume with UEFITool.
 

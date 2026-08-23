@@ -9,7 +9,7 @@
 
 [Defines]
   INF_VERSION                    = 0x0001001A
-  BASE_NAME                      = MeiMeiDXEv3SMUUnlock
+  BASE_NAME                      = MeiMeiDXEv3_SMU_Unlock
   FILE_GUID                      = A3F8B2D5-7C4E-4F0A-B1D2-9E6F3C8A5B71
   MODULE_TYPE                    = DXE_DRIVER
   VERSION_STRING                 = 0.1
