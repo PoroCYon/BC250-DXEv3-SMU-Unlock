@@ -15,7 +15,7 @@ The unlock exploits a bug in SMU Queue 2 message `0x23` (subqueue-ring append). 
 
 Finally the driver fixes up the SMU state so that only the guard word differs from its boot-time value.
 
-> **Note:** The reference repo states it is BIOS 3 only - patches and offsets differ for BIOS 5 SMU firmware.
+# NOTE: The rw-r-r-0644's repo was BIOS 3 only - patches and offsets differ for BIOS 5 SMU firmware so this driver will not work on BIOS 5 either.
 
 ## Behavior
 
